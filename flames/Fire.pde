@@ -76,6 +76,7 @@ class Mask {
 
   float age;
   boolean fore;
+  float center;
   PVector position;
   PVector velocity;
   float rise;
@@ -103,10 +104,11 @@ class Mask {
 
       // actual assignments
       this.fore = false;
-      if(mouseX > 0 && mouseX < width) {
+      if (mouseX > 0 && mouseX < width) {
+        this.center = mouseX;
         this.position = new PVector(mouseX, mouseY);
-      }
-      else {
+      } else {
+        this.center = width/2;
         this.position = new PVector(width/2, height*0.75);
       }
       this.velocity = PVector.random2D();
@@ -117,7 +119,7 @@ class Mask {
       this.push = 0;
       this.repulsor = new PVector(width/2, height*-1000);
       this.repulseRadius = -100000;
-      this.radius = 37;
+      this.radius = 30;
       this.colour = color(255*c, 255*c, 255*c*random(0, 0.25));
       this.fade = random(0.5, 1.5);
     } else if (this.type == MType.SMALL_SMOKE) {
@@ -128,6 +130,7 @@ class Mask {
 
       // actual assignments
       this.fore = true;
+      this.center = width/2;
       this.position = new PVector(width/2+dx/10, height*0.75+5*height/4);
       this.velocity = new PVector(dx, 0);
       this.rise = random(100, 200);
@@ -165,9 +168,9 @@ class Mask {
     this.velocity.y -= this.rise*dt;
 
     // distance to center
-    float distc = this.position.x - width/2;
-    // TODO friction and pull linear combination, combine!
+    float distc = this.position.x - this.center;
 
+    // TODO friction and pull linear combination, combine!
     this.velocity.x -= this.velocity.x*this.friction*dt + distc*this.pull*dt;
 
     // apply velocity
