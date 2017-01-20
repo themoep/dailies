@@ -41,7 +41,8 @@ void draw() {
 
   background(#78B4F2);
   stroke(255);
-  fire.update();
+  strokeWeight(2);
+  //fire.update();
 
   fire.display();
 

@@ -1,30 +1,26 @@
-public enum MType {
-  LAZOR
-}
-
 float sign(float x) {
   return (x<0) ? -1 : 1;
 }
 
 class Fire {
-  Mask[] flames;
+  Tentacle[] tentacles;
 
-  int flameCount = 100;
+  int flameCount = 20;
 
   Fire() {
-    flames = new Mask[flameCount];
+    tentacles = new Tentacle[flameCount];
     for (int i = 0; i < flameCount; i++) {
-      flames[i] = new Mask(MType.LAZOR);
+      tentacles[i] = new Tentacle();
     }
   }
 
   void update() {
-    for (Mask m : flames) {
+    for (Tentacle m : tentacles) {
       m.update();
     }
   }
 
-  boolean cmp(Mask a, Mask b) {
+  boolean cmp(Tentacle a, Tentacle b) {
     if ( b == null) {
       return true;
     }
@@ -42,33 +38,32 @@ class Fire {
   }
 
   void sortIt() {
-    for (int i = 0; i < flames.length; i++) {
+    for (int i = 0; i < tentacles.length; i++) {
       int curIndex = i;
-      Mask brightest = null;
-      for (int j = i; j < flames.length; j++) {
-        //if (brightness(flames[j].colour) < brightest) {
-        if (cmp(flames[j], brightest)) {
-          //brightest = brightness(flames[i].colour);
-          brightest = flames[j];
+      Tentacle brightest = null;
+      for (int j = i; j < tentacles.length; j++) {
+        //if (brightness(tentacles[j].colour) < brightest) {
+        if (cmp(tentacles[j], brightest)) {
+          //brightest = brightness(tentacles[i].colour);
+          brightest = tentacles[j];
           curIndex = j;
         }
       }
-      Mask temp = flames[i];
-      flames[i] = flames[curIndex];
-      flames[curIndex] = temp;
+      Tentacle temp = tentacles[i];
+      tentacles[i] = tentacles[curIndex];
+      tentacles[curIndex] = temp;
     }
   }
 
   void display() {
     //sortIt();
-    for (int i = 0; i < flames.length; i++) {
-      flames[i].display();
+    for (int i = 0; i < tentacles.length; i++) {
+      tentacles[i].display();
     }
   }
 }
 
-class Mask {
-  MType type;
+class Tentacle {
 
   float age;
   boolean fore;
@@ -84,39 +79,52 @@ class Mask {
   color colour;
   float fade;
 
-  Mask(MType type) {
-    this.type = type;
-    this.reset();
+  Tentacle() {
+    this.age = 0;
+    // temp vars
+    float speed = random(1, 100);
+    float c = random(0, 1);
+
+    // actual assignments
+    this.fore = false;
+    this.position = new PVector(width/2, height*0.75);
+    this.velocity = PVector.random2D();
+    this.velocity.mult(speed);
+    this.rise = 100;
+    this.friction = random(0.3, 0.5);
+    this.pull = random(1, 2);
+    this.push = 0;
+    this.repulsor = new PVector(width/2, height*-1000);
+    this.repulseRadius = -100000;
+    this.radius = 1;
+    this.colour = color(255*c, 255*c, 255*c*random(0, 0.25));
+    this.fade = random(0.5, 1.5);
   }
 
   void reset() {
     this.age = 0;
+    // temp vars
+    float speed = random(1, 100);
+    float c = random(0, 1);
 
-    if (this.type == MType.LAZOR) {
-      // temp vars
-      float speed = random(1, 100);
-      float c = random(0, 1);
-
-      // actual assignments
-      this.fore = false;
-      this.position = new PVector(width/2, height*0.75);
-      this.velocity = PVector.random2D();
-      this.velocity.mult(speed);
-      this.rise = 100;
-      this.friction = random(0.3, 0.5);
-      this.pull = random(1, 2);
-      this.push = 0;
-      this.repulsor = new PVector(width/2, height*-1000);
-      this.repulseRadius = -100000;
-      this.radius = 1;
-      this.colour = color(255*c, 255*c, 255*c*random(0, 0.25));
-      this.fade = random(0.5, 1.5);
-    }
+    // actual assignments
+    this.fore = false;
+    this.position = new PVector(width/2, height*0.75);
+    this.velocity = PVector.random2D();
+    this.velocity.mult(speed);
+    this.rise = 100;
+    this.friction = random(0.3, 0.5);
+    this.pull = random(1, 2);
+    this.push = 0;
+    this.repulsor = new PVector(width/2, height*-1000);
+    this.repulseRadius = -100000;
+    this.radius = 1;
+    this.colour = color(255*c, 255*c, 255*c*random(0, 0.25));
+    this.fade = random(0.5, 1.5);
   }
 
   void update() {
     if (this.outside()) {
-      this.reset();
     }
 
     float dt = 1/frameRate;
@@ -146,10 +154,10 @@ class Mask {
     this.position.add(PVector.mult(this.velocity, dt));
 
     // adjust color
-    float r = red(colour);
-    float g = max(1, green(colour)-green(colour)*this.fade*dt);
-    float b =  max(1, blue(colour)-blue(colour)*this.fade*dt);
-    colour = color(r, g, b);
+    //float r = red(colour);
+    //float g = max(1, green(colour)-green(colour)*this.fade*dt);
+    //float b =  max(1, blue(colour)-blue(colour)*this.fade*dt);
+    //colour = color(r, g, b);
   }
 
   boolean outside() {
@@ -159,13 +167,23 @@ class Mask {
     return false;
   }
 
+  boolean inside() {
+    return ! this.outside();
+  }
+
   void display() {
-    
-    while(this.age > 0.1) {
-      
-      point(this.position.x, this.position.y);
+    PVector prev = new PVector(this.position.x, this.position.y);
+
+    while (this.inside()) {
+
+      //point(this.position.x, this.position.y);
       update();
+
+      line(this.position.x, this.position.y, prev.x, prev.y);
+      prev.x = this.position.x;
+      prev.y = this.position.y;
     }
+    this.reset();
     //stroke(255);
     //noStroke();
     //fill(colour);
