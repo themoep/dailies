@@ -11,7 +11,7 @@ int period = 200; // duration to record, in frames
 Fire fire;
 
 public void setup() {
-  size(600, 600);
+  size(500, 500);
   frameRate(12);
 
   // a fixed seed gives predictable results, eases debugging

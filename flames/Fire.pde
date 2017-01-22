@@ -10,7 +10,7 @@ class Fire {
   Mask[] flames;
 
   int flameCount = 400;
-  int sSmokeCount = 0;
+  int sSmokeCount = 200;
 
   Fire() {
     flames = new Mask[flameCount+sSmokeCount];
@@ -131,15 +131,15 @@ class Mask {
       // actual assignments
       this.fore = true;
       this.center = width/2;
-      this.position = new PVector(width/2+dx/10, height*0.75+5*height/4);
+      this.position = new PVector(width/2+dx/10, height*0.75+200);
       this.velocity = new PVector(dx, 0);
       this.rise = random(100, 200);
       this.friction = random(1, 1.5);
       this.pull = random(1, 2);
       this.push = 5;
       this.repulsor = new PVector(width/2, 0.75*height+10);
-      this.repulseRadius = 100;
-      this.radius = 100;
+      this.repulseRadius = 39;
+      this.radius = 50;
       this.colour = color(0);
       this.fade = 0;
     }
@@ -170,8 +170,12 @@ class Mask {
     // distance to center
     float distc = this.position.x - this.center;
 
+
     // TODO friction and pull linear combination, combine!
-    this.velocity.x -= this.velocity.x*this.friction*dt + distc*this.pull*dt;
+    // only apply when above fire or it flocks
+    if (this.position.y < height*0.9) {
+      this.velocity.x -= this.velocity.x*this.friction*dt + distc*this.pull*dt;
+    }
 
     // apply velocity
     this.position.add(PVector.mult(this.velocity, dt));
@@ -194,6 +198,9 @@ class Mask {
     stroke(255);
     noStroke();
     fill(colour);
+    if(this.type == MType.SMALL_SMOKE) {
+      fill(#473F58);
+    }
     ellipse(this.position.x, this.position.y, radius*2, radius*2);
   }
 }
