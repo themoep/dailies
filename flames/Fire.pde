@@ -1,5 +1,5 @@
 public enum MType {
-  FLAME, SMALL_SMOKE
+  FLAME, LARGE_SMOKE, SMALL_SMOKE
 }
 
 float sign(float x) {
@@ -10,14 +10,18 @@ class Fire {
   Mask[] flames;
 
   int flameCount = 400;
-  int sSmokeCount = 200;
+  int sSmokeCount = 100;
+  int lSmokeCount = 100;
 
   Fire() {
-    flames = new Mask[flameCount+sSmokeCount];
+    flames = new Mask[flameCount+sSmokeCount+lSmokeCount];
     for (int i = 0; i < flameCount; i++) {
       flames[i] = new Mask(MType.FLAME);
     }
     for (int i = flameCount; i < flameCount+sSmokeCount; i++) {
+      flames[i] = new Mask(MType.LARGE_SMOKE);
+    }
+    for (int i = flameCount+sSmokeCount; i < flameCount+sSmokeCount+lSmokeCount; i++) {
       flames[i] = new Mask(MType.SMALL_SMOKE);
     }
   }
@@ -46,6 +50,7 @@ class Fire {
   }
 
   void sortIt() {
+    // selection sort with custom compare function to bring brightest up front unless they have fore=true
     for (int i = 0; i < flames.length; i++) {
       int curIndex = i;
       Mask brightest = null;
@@ -104,13 +109,13 @@ class Mask {
 
       // actual assignments
       this.fore = false;
-      if (mouseX > 0 && mouseX < width) {
-        this.center = mouseX;
-        this.position = new PVector(mouseX, mouseY);
-      } else {
+      //if (mouseX > 0 && mouseX < width) {
+      //  this.center = mouseX;
+      //  this.position = new PVector(mouseX, mouseY);
+      //} else {
         this.center = width/2;
         this.position = new PVector(width/2, height*0.75);
-      }
+      //}
       this.velocity = PVector.random2D();
       this.velocity.mult(speed);
       this.rise = 100;
@@ -122,7 +127,7 @@ class Mask {
       this.radius = 30;
       this.colour = color(255*c, 255*c, 255*c*random(0, 0.25));
       this.fade = random(0.5, 1.5);
-    } else if (this.type == MType.SMALL_SMOKE) {
+    } else if (this.type == MType.LARGE_SMOKE) {
       // temp vars
       float c = 0;
       float speed = random(10, 1000);
@@ -130,16 +135,47 @@ class Mask {
 
       // actual assignments
       this.fore = true;
-      this.center = width/2;
-      this.position = new PVector(width/2+dx/10, height*0.75+200);
+      //if (mouseX > 0 && mouseX < width) {
+      //  this.center = mouseX;
+      //  this.position = new PVector(mouseX, mouseY+200);
+      //} else {
+        this.center = width/2;
+        this.position = new PVector(width/2, height*0.75+200);
+      //}
       this.velocity = new PVector(dx, 0);
       this.rise = random(100, 200);
       this.friction = random(1, 1.5);
       this.pull = random(1, 2);
       this.push = 5;
-      this.repulsor = new PVector(width/2, 0.75*height+10);
+      this.repulsor = new PVector(this.position.x, this.position.y+10);
       this.repulseRadius = 39;
       this.radius = 50;
+      this.colour = color(0);
+      this.fade = 0;
+    }
+    else if (this.type == MType.SMALL_SMOKE) {
+      // temp vars
+      float c = 0;
+      float speed = random(10, 100);
+      float dx = (random(0, 1) > 0.5) ? speed : -speed;
+
+      // actual assignments
+      this.fore = true;
+      //if (mouseX > 0 && mouseX < width) {
+      //  this.center = mouseX;
+      //  this.position = new PVector(mouseX, mouseY+200);
+      //} else {
+        this.center = width/2;
+        this.position = new PVector(width/2+dx/10, height*0.75+125);
+      //}
+      this.velocity = new PVector(dx, 0);
+      this.rise = random(100, 200);
+      this.friction = random(1, 1.5);
+      this.pull = random(1, 2);
+      this.push = 5;
+      this.repulsor = new PVector(this.position.x, this.position.y+60);
+      this.repulseRadius = 90;
+      this.radius = random(10,20);
       this.colour = color(0);
       this.fade = 0;
     }
@@ -167,12 +203,10 @@ class Mask {
     // apply rise force
     this.velocity.y -= this.rise*dt;
 
-    // distance to center
+    // appply drive tp center
     float distc = this.position.x - this.center;
-
-
     // TODO friction and pull linear combination, combine!
-    // only apply when above fire or it flocks
+    // only apply when above fire or smocke gets stuck below flame
     if (this.position.y < height*0.9) {
       this.velocity.x -= this.velocity.x*this.friction*dt + distc*this.pull*dt;
     }
@@ -196,9 +230,9 @@ class Mask {
 
   void display() {
     stroke(255);
-    noStroke();
+    //noStroke();
     fill(colour);
-    if(this.type == MType.SMALL_SMOKE) {
+    if(this.type == MType.LARGE_SMOKE) {
       fill(#473F58);
     }
     ellipse(this.position.x, this.position.y, radius*2, radius*2);
