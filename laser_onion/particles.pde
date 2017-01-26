@@ -2,15 +2,16 @@ float sign(float x) {
   return (x<0) ? -1 : 1;
 }
 
+/*
 class Fire {
-  Tentacle[] tentacles;
+  Mask[] masks;
 
   int flameCount = 20;
 
   Fire() {
-    tentacles = new Tentacle[flameCount];
+    masks = new Tentacle[flameCount];
     for (int i = 0; i < flameCount; i++) {
-      tentacles[i] = new Tentacle();
+      masks[i] = new Tentacle();
     }
   }
 
@@ -124,9 +125,12 @@ class Tentacle {
   }
 
   void update() {
+    
+    this.velocity.rotate(noise(frameCount/20.0));
+    
     if (this.outside()) {
     }
-
+    
     float dt = 1/frameRate;
     this.age += dt;
 
@@ -147,7 +151,6 @@ class Tentacle {
     // distance to center
     float distc = this.position.x - width/2;
     // TODO friction and pull linear combination, combine!
-
     this.velocity.x -= this.velocity.x*this.friction*dt + distc*this.pull*dt;
 
     // apply velocity
@@ -191,3 +194,5 @@ class Tentacle {
     //point(this.position.x, this.position.y);
   }
 }
+
+*/
