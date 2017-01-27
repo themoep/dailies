@@ -27,6 +27,7 @@ class Onion {
 class Tentacle {
 
   float unique;
+  float unique2;
   float angle;
   float magnitude;
 
@@ -35,6 +36,7 @@ class Tentacle {
 
   Tentacle() {
     this.unique = random(0, 10);
+    this.unique2 = random(0, 10);
     this.angle = noise(t+this.unique)*TWO_PI;
     this.magnitude = noise(t+this.unique)*100;
 
@@ -44,7 +46,7 @@ class Tentacle {
 
   void update() {
     this.angle = noise(t+this.unique)*TWO_PI;
-    this.magnitude = noise(t+this.unique)*300;
+    this.magnitude = noise(t+this.unique2)*300;
   }
 
   void display() {
@@ -71,9 +73,17 @@ class Tentacle {
       prevPos = pos.copy();
 
       i++;
-      if (i > 40) {
+      //println(pos.y);
+      if (pos.y < 0) {
+        //println("....");
+        break;
+      }
+
+      if (i > 200) {
+
         break;
       }
     } while (pos.x > 0);
+    //println("----------------------");
   }
 }

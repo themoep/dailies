@@ -42,9 +42,9 @@ public void setup() {
 void draw() {
   // custom code starts here
 
-  t += 1/frameRate;
+  t += (1/frameRate)/10.0;
   background(#49D693);
-  stroke(255);
+  stroke(#FA9595);
   strokeWeight(6);
   onion.update();
 
