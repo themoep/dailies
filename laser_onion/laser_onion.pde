@@ -65,7 +65,7 @@ void draw() {
    println("gif saved");
    }
    }//*/
-  frame.setTitle(""+frameRate);
+  surface.setTitle(""+frameRate);
 }
 
 void mouseClicked() {

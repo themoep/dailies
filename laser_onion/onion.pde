@@ -35,18 +35,22 @@ class Tentacle {
   float pull;
 
   Tentacle() {
-    this.unique = random(0, 10);
-    this.unique2 = random(0, 10);
-    this.angle = noise(t+this.unique)*TWO_PI;
-    this.magnitude = noise(t+this.unique)*100;
+    this.unique = random(0, 1000);
+    this.unique2 = random(0, 1000);
+    this.angle = noise(t+this.unique)*TWO_PI*2;
+    this.magnitude = noise(t+this.unique2)*200;
+    
+    println(angle);
+    println(magnitude);
+    println();
 
     this.friction = random(0.3, 0.5);
     this.pull = random(1, 2);
   }
 
   void update() {
-    this.angle = noise(t+this.unique)*TWO_PI;
-    this.magnitude = noise(t+this.unique2)*300;
+    this.angle = noise(t+this.unique)*TWO_PI*2;
+    this.magnitude = noise(t+this.unique2)*200;
   }
 
   void display() {
@@ -84,6 +88,14 @@ class Tentacle {
         break;
       }
     } while (pos.x > 0);
+     PVector debug = new PVector(1,0);
+     debug.rotate(this.angle);
+     debug.mult(this.magnitude);
+     pushStyle();
+     strokeWeight(1);
+     stroke(0,255,255);
+     line(width/2, height*0.75, width/2+debug.x, height*0.75+debug.y);
+     popStyle();
     //println("----------------------");
   }
 }
