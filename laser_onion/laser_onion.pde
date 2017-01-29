@@ -21,6 +21,7 @@ public void setup() {
 
   // a fixed seed gives predictable results, eases debugging
   randomSeed(1234);
+  noiseSeed(1234);
 
   /*
   if (renderGif) {
@@ -44,7 +45,9 @@ void draw() {
 
   t += (1/frameRate)/10.0;
   background(#49D693);
-  stroke(#FA9595);
+  stroke(#FA9595, 200);
+  //fill(255,128);
+  noFill();
   strokeWeight(6);
   onion.update();
 
