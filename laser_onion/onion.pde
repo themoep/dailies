@@ -1,7 +1,7 @@
 
 
 class Onion {
-  int tentacleCount = 80;
+  int tentacleCount = 180;
   Tentacle[] tentacles;
 
   Onion() {
@@ -40,9 +40,9 @@ class Tentacle {
     this.angle = noise(t+this.unique)*TWO_PI*2;
     this.magnitude = noise(t+this.unique2)*200;
 
-    println(angle);
-    println(magnitude);
-    println();
+    //println(angle);
+    //println(magnitude);
+    //println();
 
     this.friction = random(0.3, 0.5);
     this.pull = random(1, 2);
@@ -61,7 +61,10 @@ class Tentacle {
     vel.mult(this.magnitude);
     PVector prevPos  = pos.copy();
     int i = 0;
-
+    int max_i = 13;
+    
+    
+    
     beginShape();
     curveVertex(pos.x, pos.y);
     do {
@@ -76,6 +79,11 @@ class Tentacle {
       pos.add(PVector.mult(vel, dt));
 
       //line(pos.x, pos.y, prevPos.x, prevPos.y);
+      float l =  float(i)/float(max_i);
+      l = l*l*l;
+      //println(l);
+      color c = lerpColor(color(#f55c5c, 144), color(#ece98d, 144), l);
+      stroke(c);
       curveVertex(pos.x, pos.y);
 
       prevPos = pos.copy();
@@ -86,7 +94,7 @@ class Tentacle {
         break;
       }
       //} while (pos.y > 100);
-    } while (i < 20);
+    } while (i < max_i);
     endShape();
 
     if (false) {

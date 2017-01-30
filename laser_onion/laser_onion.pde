@@ -16,9 +16,9 @@ Onion onion;
 float t;
 
 public void setup() {
-  size(500, 500);
+  size(500, 500, P3D);
   frameRate(12);
-
+  
   // a fixed seed gives predictable results, eases debugging
   randomSeed(1234);
   noiseSeed(1234);
@@ -37,6 +37,8 @@ public void setup() {
   onion = new Onion();
   background(#78B4F2);
   
+  strokeCap(PROJECT);
+  
   t = 0;
 }
 
@@ -44,11 +46,11 @@ void draw() {
   // custom code starts here
 
   t += (1/frameRate)/10.0;
-  background(#49D693);
-  stroke(#FA9595, 200);
+  background(#171a7e);
+  stroke(#FA9595, 144);
   //fill(255,128);
   noFill();
-  strokeWeight(6);
+  strokeWeight(10);
   onion.update();
 
   onion.display();
