@@ -1,78 +1,50 @@
-// for processsing3 use this library: https://github.com/01010101/GifAnimation
-// TODO: don't reset to random but instead move around
-// TODO: draw shape instead of pixels
-
-// #daily #processing #laser_onion
-
-//import gifAnimation.*;
-
-boolean renderGif = true;
-//GifMaker gifExport;
-int offset = 0; // because first frames are not so pretty, we skip them
-int period = 200; // duration to record, in frames
+/*
+ * tentacle onion!
+ * by themoep
+ * inspired by A Lövely Little Fire: https://gaeel.itch.io/a-lovely-little-fire
+ */
 
 // custom variables go here
-Onion onion;
-float t;
+Onion onion; // our collection of tentacles is called an onion
+float t; // t saves the time in seconds
+
+// if you want to see more
+boolean debug = false;
 
 public void setup() {
-  size(500, 500, P3D);
+  size(500, 500);
   frameRate(12);
+  smooth();
   
   // a fixed seed gives predictable results, eases debugging
   randomSeed(1234);
   noiseSeed(1234);
 
-  /*
-  if (renderGif) {
-   gifExport = new GifMaker(this, "export.gif");
-   gifExport.setRepeat(0); // make it an "endless" animation
-   //gifExport.setTransparent(0,0,0); // make black the transparent color. every black pixel in the animation will be transparent
-   // GIF doesn't know have alpha values like processing. a pixel can only be totally transparent or totally opaque.
-   // set the processing background and the transparent gif color to the same value as the gifs destination background color 
-   // (e.g. the website bg-color). Like this you can have the antialiasing from processing in the gif.
-   }//*/
-
   // custom setup code goes here 
   onion = new Onion();
-  background(#78B4F2);
-  
-  strokeCap(PROJECT);
-  
   t = 0;
+  
+  stroke(#f55c5c);
+  strokeWeight(15);
+  noFill();
 }
 
 void draw() {
-  // custom code starts here
-
-  t += (1/frameRate)/10.0;
+  // first advance the time
+  t += 1/frameRate;
+  
+  // draw a backgrund, make it blue!
   background(#171a7e);
-  stroke(#FA9595, 144);
-  //fill(255,128);
-  noFill();
-  strokeWeight(10);
+  
+  // update onion values and display it!
   onion.update();
-
   onion.display();
 
-
-  // custom code ends here
-
-  /*
-  if (renderGif) { 
-   if (frameCount > offset) {
-   gifExport.setDelay(1);
-   gifExport.addFrame();
-   }
-   
-   if (frameCount == offset+period) {
-   gifExport.finish();
-   println("gif saved");
-   }
-   }//*/
+  // for debugging purposes, set the title to the current framerate
   surface.setTitle(""+frameRate);
 }
 
+// on click, save a picture!
 void mouseClicked() {
   saveFrame("####-frame.png");
 }
