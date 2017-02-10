@@ -1,6 +1,8 @@
 
 ArrayList <PVector> circles = new ArrayList<PVector>();
 
+// todo: draw the radii going around with fading effect?
+
 float diameter = 75;
 int margin = 25;
 
@@ -20,7 +22,34 @@ void draw() {
 
   for (int i = 0; i < circles.size(); i++) {
     PVector c = circles.get(i);
-    ellipse(c.x, c.y, c.z, c.z);
+    noStroke();
+    fill(#ff8822);
+    // ellipse(c.x, c.y, c.z, c.z);
+  }
+
+
+
+
+  strokeWeight(3);
+  stroke(0, 128, 255);
+  for (int i = 0; i < circles.size(); i++) {
+    float smallest = 100000000;
+    int a = -1;
+    int b = -1;
+    PVector c = circles.get(i);
+    for (int j = 0; j < circles.size(); j++) {
+      if (j == i) continue;
+      PVector d = circles.get(j);
+      float f = dist(c.x, c.y, d.x, d.y);
+      if (f < smallest) {
+        smallest = f;
+        a = i;
+        b = j;
+      }
+    }
+    if (a != -1) {
+      line(circles.get(a).x, circles.get(a).y, circles.get(b).x, circles.get(b).y);
+    }
   }
 }
 
@@ -54,5 +83,17 @@ boolean overlap(PVector c) {
 }
 
 void mouseClicked() {
-  saveFrame("####-frame.png");
+  String s = "";
+
+  s += year();   // 2003, 2004, 2005, etc.
+  s+= ".";
+  s += month();  // Values from 1 - 12
+  s+= ".";
+  s += day();    // Values from 1 - 31
+  s += "_";
+  s+= hour();
+  s+= minute();
+  s+= "-####-frame.png";
+
+  saveFrame(s);
 }
