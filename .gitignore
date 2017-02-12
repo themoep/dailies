@@ -4,3 +4,6 @@
 *.gif
 
 *.swp
+
+*/bin
+*/obj
