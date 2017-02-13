@@ -5,11 +5,13 @@ ArrayList <Circle> circles = new ArrayList<Circle>();
 
 class Circle {
   float x, y, r, a = 0.0;
+  float o;
   Circle(float x, float y, float r) {
     this.x = x;
     this.y = y;
     this.r = r;
     this.a = t;
+    this.o = random(1.0);
   }
 
   Circle(float r) {
@@ -17,6 +19,15 @@ class Circle {
     this.y = random(margin, height-margin);
     this.r = r;
     this.a = t;
+    this.o = random(5.0);
+  }
+
+  void draw() {
+    float x2 = r * cos(t-a);
+    float y2 = r * sin(t-a);
+    strokeWeight(2);
+    stroke(0, 128-16+32*this.o, 255);
+    line(x-x2*0.25, y-y2*0.25, x+x2, y+y2);
   }
 }
 
@@ -37,23 +48,19 @@ void draw() {
   //background(45, 20);
   noStroke();
   fill(45, 20);
-  rect(0,0,width,height);
+  rect(0, 0, width, height);
   t+= 1/frameRate;
 
-  addCircle();
-
+  if (circles.size() < 150) {
+    addCircle();
+  }
 
   for (int i = 0; i < circles.size(); i++) {
     Circle c = circles.get(i);
     noStroke();
     fill(#ff8822);
     //ellipse(c.x, c.y, c.r, c.r);
-
-    float x2 = c.r * cos(t-c.a);
-    float y2 = c.r * sin(t-c.a);
-    strokeWeight(2);
-     stroke(0, 128, 255);
-    line(c.x, c.y, c.x+x2, c.y+y2);
+    c.draw();
   }
 
 
