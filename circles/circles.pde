@@ -26,12 +26,13 @@ class Circle {
     float x2 = r * cos(t-a);
     float y2 = r * sin(t-a);
     strokeWeight(2);
-    stroke(0, 128-16+32*this.o, 255);
+    float d = dist(mouseX,mouseY, this.x, this.y);
+    stroke(0, 128-16+32*(width/d), 255);
     line(x-x2*0.25, y-y2*0.25, x+x2, y+y2);
   }
 }
 
-float diameter = 55;
+float diameter = 45;
 int margin = 55;
 
 float t = 0;
@@ -51,7 +52,7 @@ void draw() {
   rect(0, 0, width, height);
   t+= 1/frameRate;
 
-  if (circles.size() < 150) {
+  if (circles.size() < 350) {
     addCircle();
   }
 
